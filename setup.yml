@@ -22,7 +22,10 @@
           - zsh
           - tmux
           - neovim
+          - xclip
+          - eza
           - curl
+          - bat
         state: present
 
     # Ensure /root/.ssh directory exists
@@ -61,6 +64,13 @@
         src: "ssh/config"
         dest: "{{ ssh_dir }}/config"
         mode: '0644'
+
+    # Add Github to known_hosts
+    - name: Add GitHub to known_hosts
+      known_hosts:
+        path: "~/.ssh/known_hosts"
+        name: "github.com"
+        key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
 
     # Clone dotfiles repository
     - name: Clone dotfiles repository
