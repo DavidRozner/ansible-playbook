@@ -21,22 +21,52 @@
           - stow
           - zsh
           - tmux
-          - neovim
           - xclip
           - eza
           - curl
           - bat
+          - gcc
+          - clang
+          - build-essential
+          - libstdc++-12-dev
         state: present
 
-    # Ensure /root/.ssh directory exists
-    - name: Ensure /root/.ssh directory exists
+    # Install Neovim from github repository
+    - name: download neovim binary
+      get_url:
+        url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+        dest: "/tmp/nvim-linux64.tar.gz"
+
+    - name: remove old nvim version
+      file:
+        path: "/opt/nvim"
+        state: absent
+
+    - name: extract neovim binary to /opt
+      unarchive:
+        src: "/tmp/nvim-linux64.tar.gz"
+        dest: "/opt"
+        remote_src: yes
+    - name: symlink neovim binary to /usr/bin
+      file:
+        src: "/opt/nvim-linux64/bin/nvim"
+        dest: "/usr/bin/nvim"
+        state: link
+
+    - name: "clean downloaded file"
+      file:
+        path: "/tmp/nvim-linux64.tar.gz"
+        state: absent
+
+    # ensure /root/.ssh directory exists
+    - name: ensure /root/.ssh directory exists
       file:
         path: /root/.ssh
         state: directory
         mode: '0700'
 
-    # Deploy SSH private keys
-    - name: Deploy SSH private keys
+    # deploy ssh private keys
+    - name: deploy ssh private keys
       copy:
         src: "ssh/{{item}}"
         dest: "{{ ssh_dir }}/{{ item | regex_replace('.enc$', '') }}"
