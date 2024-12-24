@@ -61,6 +61,15 @@
         path: "/tmp/nvim-linux64.tar.gz"
         state: absent
 
+    # ---------------------------------------------
+    # Zsh
+    # ---------------------------------------------
+    - name: Install Oh My Zsh
+      shell: |
+        RUNZSH=no sh -c "$(curl -fsSl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+      args:
+        creates: ~/.oh-my-zsh
+
     # ensure /root/.ssh directory exists
     - name: ensure /root/.ssh directory exists
       file:
@@ -240,3 +249,36 @@
         PATH: "/usr/local/go/bin:{{ ansible_env.HOME }}/go/bin:{{ ansible_env.PATH }}"
       args:
         executable: /bin/bash
+
+    # ------------------------------------------
+    # Zsh
+    # ------------------------------------------
+    - name: Install zsh-autosuggestions
+      git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        version: master
+
+    - name: Install zsh-syntax-highlighting
+      git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        version: master
+
+    - name: Install you-should-use
+      git:
+        repo: https://github.com/MichaelAquilina/zsh-you-should-use.git
+        dest: ~/.oh-my-zsh/custom/plugins/you-should-use
+        version: master
+
+    - name: Install zsh-bat
+      git:
+        repo: https://github.com/fdellwing/zsh-bat.git
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-bat
+        version: master   
+
+    - name: Install Powerlevel10k theme
+      git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
+        version: master
