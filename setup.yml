@@ -13,11 +13,6 @@
     ssh_dir: "{{ home_dir }}/.ssh"
 
   tasks:
-    # Debug variables
-    - name: Debug variables
-      debug:
-        msg: "Current user: {{ current_user }}, home directory: {{ home_dir }}"
-
     # Update and upgrade system
     - name: Update system
       apt:
