@@ -142,6 +142,21 @@
     # ------------------------------------------
     # TypeScript (typescript-language-server)
     # ------------------------------------------
+
+    - name: Install Node.js and npm
+      apt:
+        name: nodejs
+        state: present
+      tags:
+        - nodejs
+
+    - name: Install Node.js build tools
+      apt:
+        name: build-essential
+        state: present
+      tags:
+        - nodejs
+
     - name: Install TypeScript LSP
       npm:
         name: typescript-language-server
