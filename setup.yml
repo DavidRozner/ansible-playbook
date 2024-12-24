@@ -1,26 +1,23 @@
 ---
 - name: Setup Dev Environment
   hosts: localhost
-  become: yes
-
-  vars_prompt:
-    - name: user_name
-      prompt: "Enter your system username"
-      private: no
+  become: false
 
   vars:
-    home_dir: "/home/{{ user_name }}"
+    home_dir: "{{ ansible_env.HOME }}"
     ssh_dir: "{{ home_dir }}/.ssh"
 
   tasks:
     # Update and upgrade system
     - name: Update system
+      become: true
       apt:
         update_cache: yes
         upgrade: dist
 
     # Install essential packages
     - name: Install essential tools
+      become: true
       apt: 
         name: 
           - git
