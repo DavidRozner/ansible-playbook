@@ -3,6 +3,9 @@
   hosts: localhost
   become: yes
 
+  vars:
+    ssh_dir: "~/.ssh"
+
   tasks:
     # Update and upgrade system
     - name: Update system
@@ -22,18 +25,41 @@
           - curl
         state: present
 
-    # Copy SSH keys ( host -> Docker )
-    - name: Copy SSH keys to container
-      copy:
-          src: ~/.ssh/
-          dest: /root/.ssh/
-          mode: '0700'
+    # Ensure /root/.ssh directory exists
+    - name: Ensure /root/.ssh directory exists
+      file:
+        path: /root/.ssh
+        state: directory
+        mode: '0700'
 
-    # Setup ssh permissions
-    - name: Set permissions for SSH keys
-      file: 
-        path: /root/.ssh/id_rsa
+    # Deploy SSH private keys
+    - name: Deploy SSH private keys
+      copy:
+        src: "ssh/{{item}}"
+        dest: "{{ ssh_dir }}/{{ item | regex_replace('.enc$', '') }}"
         mode: '0600'
+        decrypt: yes
+      with_items:
+        - id_ed25519_personal.enc
+        - id_ed25519_heyday.enc
+        - id_ed25519_work.enc
+
+    # Deploy SSH public keys
+    - name: Deploy SSH public keys
+      copy:
+        src: "ssh/{{item}}"
+        dest: "{{ ssh_dir }}/{{item}}"
+        mode: '0644'
+      with_items:
+        - id_ed25519_personal.pub
+        - id_ed25519_work.pub
+        - id_ed25519_heyday.pub
+    
+    # Set up SSH config
+      copy:
+        src: "ssh/config"
+        dest: "{{ ssh_dir }}/config"
+        mode: '0644'
 
     # Clone dotfiles repository
     - name: Clone dotfiles repository
