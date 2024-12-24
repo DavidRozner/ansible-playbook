@@ -71,7 +71,7 @@
       shell: |
         RUNZSH=no sh -c "$(curl -fsSl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
       args:
-        creates: ~/.oh-my-zsh
+        creates: "{{ home_dir }}/.oh-my-zsh"
 
     # ensure /root/.ssh directory exists
     - name: ensure /root/.ssh directory exists
