@@ -1,0 +1,56 @@
+---
+- name: Setup Dev Environment
+  hosts: localhost
+  become: yes
+
+  tasks:
+    # Update and upgrade system
+    - name: Update system
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    # Install essential packages
+    - name: Install essential tools
+      apt: 
+        name: 
+          - git
+          - stow
+          - zsh
+          - tmux
+          - neovim
+          - curl
+        state: present
+
+    # Copy SSH keys ( host -> Docker )
+    - name: Copy SSH keys to container
+      copy:
+          src: ~/.ssh/
+          dest: /root/.ssh/
+          mode: '0700'
+
+    # Setup ssh permissions
+    - name: Set permissions for SSH keys
+      file: 
+        path: /root/.ssh/id_rsa
+        mode: '0600'
+
+    # Clone dotfiles repository
+    - name: Clone dotfiles repository
+      git: 
+        repo: git@github-personal:DavidRzoner/dotfiles.git
+        dest: ~/dotfiles
+        version: HEAD
+        key_file: /root/.ssh/id_rsa
+
+    # Use Stow for symlink dotfiles
+    - name: Apply dotfiles using Stow
+      shell: |
+        stow zsh
+        stow nvim
+        stow tmux
+        stow git
+        stow ideavim
+      args:
+        chdir: ~/dotfiles
+
