@@ -3,10 +3,14 @@
   hosts: localhost
   become: yes
 
+  vars_prompt:
+    - name: user_name
+      prompt: "Enter your system username"
+      private: no
+
   vars:
-    ssh_dir: "{{ ansible_env.HOME }}/.ssh"
-    current_user: "{{ ansible_facts.user }}"
-    home_dir: "/home/{{ current_user }}"
+    home_dir: "/home/{{ user_name }}"
+    ssh_dir: "{{ home_dir }}/.ssh"
 
   tasks:
     # Debug variables
