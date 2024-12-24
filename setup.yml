@@ -137,7 +137,7 @@
         stow git
         stow ideavim
       args:
-        chdir: ~/dotfiles
+        chdir: "{{ home_dir }}/dotfiles"
 
     # ------------------------------------------
     # Rust
@@ -146,7 +146,7 @@
       shell: |
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y 
       args:
-        creates: ~/.cargo/bin/rustup
+        creates: "{{ home_dir }}/.cargo/bin/rustup"
 
     - name: Install rust-analyzer
       shell: |
