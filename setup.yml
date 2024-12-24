@@ -31,7 +31,9 @@
           - libstdc++-12-dev
         state: present
 
-    # Install Neovim from github repository
+    # ---------------------------------------------
+    # Nvim
+    # ---------------------------------------------
     - name: download neovim binary
       get_url:
         url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
@@ -121,3 +123,17 @@
       args:
         chdir: ~/dotfiles
 
+    # ------------------------------------------
+    # Rust
+    # ------------------------------------------
+    - name: Install rustup
+      shell: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y 
+      args:
+        creates: ~/.cargo/bin/rustup
+
+    - name: Install rust-analyzer
+      shell: |
+        source $HOME/.cargo/env && rustup component add rust-analyzer
+      args:
+        executable: /bin/bash
