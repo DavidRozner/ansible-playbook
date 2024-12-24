@@ -65,10 +65,10 @@
     # Clone dotfiles repository
     - name: Clone dotfiles repository
       git: 
-        repo: git@github-personal:DavidRzoner/dotfiles.git
+        repo: git@github-personal:DavidRozner/dotfiles.git
         dest: ~/dotfiles
+        key_file: "~/.ssh/id_ed25519_personal"
         version: HEAD
-        key_file: /root/.ssh/id_rsa
 
     # Use Stow for symlink dotfiles
     - name: Apply dotfiles using Stow
