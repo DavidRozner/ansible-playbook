@@ -142,18 +142,9 @@
         key_file: "{{ home_dir }}/.ssh/id_ed25519_personal"
         version: HEAD
 
-    # Use Stow for symlink dotfiles
-    - name: Remove existing Zsh config files
-      file:
-        path: "{{ home_dir }}/{{ item }}"
-        state: absent
-      with_items:
-        - .zshrc
-        - .p10k.zsh
-
     - name: Apply dotfiles using Stow
       shell: |
-        stow --target="{{ home_dir }}" zsh
+        stow zsh
         stow nvim
         stow tmux
         stow git
