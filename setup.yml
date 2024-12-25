@@ -152,9 +152,6 @@
       args:
         chdir: "{{ home_dir }}/dotfiles"
 
-    - name: Verify symlinks
-      command: test -L "{{ home_dir }}/.zshrc"
-
     # ------------------------------------------
     # Rust
     # ------------------------------------------
