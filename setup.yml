@@ -18,8 +18,8 @@
     # Install essential packages
     - name: Install essential tools
       become: true
-      apt: 
-        name: 
+      apt:
+        name:
           - git
           - stow
           - zsh
@@ -67,11 +67,28 @@
     # ---------------------------------------------
     # Zsh
     # ---------------------------------------------
+    - name: Remove existing Oh My Zsh installation
+      file:
+        path: "{{ home_dir }}/.oh-my-zsh"
+        state: absent
+
     - name: Install Oh My Zsh
-      shell: |
-        RUNZSH=no sh -c "$(curl -fsSl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-      args:
-        creates: "{{ home_dir }}/.oh-my-zsh"
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/install_ohmyzsh.sh
+        mode: "0777"
+
+    - name: Run OhMyZsh installation script
+      command:
+        cmd: sh /tmp/install_ohmyzsh.sh
+
+    - name: Remove temporary Oh My Zsh installation script
+      file:
+        path: /tmp/install_ohmyzsh.sh
+        state: absent
+
+    - name: Set Zsh as default shell
+      command: chsh -s /bin/zsh "{{ansible_user_id}}"
 
     # ensure /root/.ssh directory exists
     - name: ensure /root/.ssh directory exists
@@ -102,7 +119,7 @@
         - id_ed25519_personal.pub
         - id_ed25519_work.pub
         - id_ed25519_heyday.pub
-    
+
     # Set up SSH config
     - name: Deploy SSH Config
       copy:
@@ -119,16 +136,24 @@
 
     # Clone dotfiles repository
     - name: Clone dotfiles repository
-      git: 
+      git:
         repo: git@github-personal:DavidRozner/dotfiles.git
         dest: "{{ home_dir }}/dotfiles"
         key_file: "{{ home_dir }}/.ssh/id_ed25519_personal"
         version: HEAD
 
     # Use Stow for symlink dotfiles
+    - name: Remove existing Zsh config files
+      file:
+        path: "{{ home_dir }}/{{ item }}"
+        state: absent
+      with_items:
+        - .zshrc
+        - .p10k.zsh
+
     - name: Apply dotfiles using Stow
       shell: |
-        stow zsh
+        stow --target="{{ home_dir }}" zsh
         stow nvim
         stow tmux
         stow git
@@ -136,12 +161,15 @@
       args:
         chdir: "{{ home_dir }}/dotfiles"
 
+    - name: Verify symlinks
+      command: test -L "{{ home_dir }}/.zshrc"
+
     # ------------------------------------------
     # Rust
     # ------------------------------------------
     - name: Install rustup
       shell: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y 
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       args:
         creates: "{{ home_dir }}/.cargo/bin/rustup"
 
@@ -194,64 +222,64 @@
     # ------------------------------------------
     # Python (pyright)
     # ------------------------------------------
-#    - name: Install Python LSP
-#      npm:
-#        name: pyright
-#        global: yes
-#      tags:
-#        - lsp
+    #    - name: Install Python LSP
+    #      npm:
+    #        name: pyright
+    #        global: yes
+    #      tags:
+    #        - lsp
 
     # ------------------------------------------
     # Java (jdtls)
     # ------------------------------------------
-#    - name: Install Java LSP (jdtls)
-#      shell: |
-#        curl -L -o /tmp/jdtls.tar.gz https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz
-#        mkdir -p ~/.local/share/jdtls
-#        tar -xzf /tmp/jdtls.tar.gz -C ~/.local/share/jdtls --strip-components=1
-#      args:
-#        creates: ~/.local/share/jdtls
+    #    - name: Install Java LSP (jdtls)
+    #      shell: |
+    #        curl -L -o /tmp/jdtls.tar.gz https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz
+    #        mkdir -p ~/.local/share/jdtls
+    #        tar -xzf /tmp/jdtls.tar.gz -C ~/.local/share/jdtls --strip-components=1
+    #      args:
+    #        creates: ~/.local/share/jdtls
 
     # ------------------------------------------
     # C# (omnisharp)
     # ------------------------------------------
-#    - name: Install .NET SDK
-#      shell: |
-#        wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-#        dpkg -i packages-microsoft-prod.deb
-#        apt update
-#        apt install -y dotnet-sdk-6.0
-#      args:
-#        creates: /usr/bin/dotnet
-#
-#    - name: Install OmniSharp
-#      shell: |
-#        mkdir -p ~/.local/share/omnisharp
-#        wget https://github.com/OmniSharp/omnisharp-roslyn/releases/latest/download/omnisharp-linux-x64-net6.0.tar.gz -O /tmp/omnisharp.tar.gz
-#        tar -xzf /tmp/omnisharp.tar.gz -C ~/.local/share/omnisharp
-#      args:
-#        creates: ~/.local/share/omnisharp/OmniSharp.dll
+    #    - name: Install .NET SDK
+    #      shell: |
+    #        wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    #        dpkg -i packages-microsoft-prod.deb
+    #        apt update
+    #        apt install -y dotnet-sdk-6.0
+    #      args:
+    #        creates: /usr/bin/dotnet
+    #
+    #    - name: Install OmniSharp
+    #      shell: |
+    #        mkdir -p ~/.local/share/omnisharp
+    #        wget https://github.com/OmniSharp/omnisharp-roslyn/releases/latest/download/omnisharp-linux-x64-net6.0.tar.gz -O /tmp/omnisharp.tar.gz
+    #        tar -xzf /tmp/omnisharp.tar.gz -C ~/.local/share/omnisharp
+    #      args:
+    #        creates: ~/.local/share/omnisharp/OmniSharp.dll
 
     # ------------------------------------------
     # Go (gopls)
     # ------------------------------------------
-#    - name: Download and install Go
-#      shell: |
-#        curl -LO https://go.dev/dl/go1.21.1.linux-amd64.tar.gz
-#        tar -C /usr/local -xzf go1.21.1.linux-amd64.tar.gz
-#        echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
-#        export PATH=$PATH:/usr/local/go/bin
-#      args:
-#        creates: /usr/local/go/bin/go
-#
-#    - name: Install Go LSP (gopls)
-#      shell: |
-#        go install golang.org/x/tools/gopls@v0.16.0
-#      environment:
-#        GOPATH: "{{ ansible_env.HOME }}/go"
-#        PATH: "/usr/local/go/bin:{{ ansible_env.HOME }}/go/bin:{{ ansible_env.PATH }}"
-#      args:
-#        executable: /bin/bash
+    #    - name: Download and install Go
+    #      shell: |
+    #        curl -LO https://go.dev/dl/go1.21.1.linux-amd64.tar.gz
+    #        tar -C /usr/local -xzf go1.21.1.linux-amd64.tar.gz
+    #        echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
+    #        export PATH=$PATH:/usr/local/go/bin
+    #      args:
+    #        creates: /usr/local/go/bin/go
+    #
+    #    - name: Install Go LSP (gopls)
+    #      shell: |
+    #        go install golang.org/x/tools/gopls@v0.16.0
+    #      environment:
+    #        GOPATH: "{{ ansible_env.HOME }}/go"
+    #        PATH: "/usr/local/go/bin:{{ ansible_env.HOME }}/go/bin:{{ ansible_env.PATH }}"
+    #      args:
+    #        executable: /bin/bash
 
     # ------------------------------------------
     # Zsh
@@ -278,7 +306,7 @@
       git:
         repo: https://github.com/fdellwing/zsh-bat.git
         dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/zsh-bat"
-        version: master   
+        version: master
 
     - name: Install Powerlevel10k theme
       git:
