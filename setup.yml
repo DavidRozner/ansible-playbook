@@ -7,6 +7,9 @@
     home_dir: "{{ ansible_env.HOME }}"
     ssh_dir: "{{ home_dir }}/.ssh"
 
+  roles:
+    - role: zsh
+
   tasks:
     # Update and upgrade system
     - name: Update system
