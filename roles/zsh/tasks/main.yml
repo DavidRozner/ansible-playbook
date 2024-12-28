@@ -3,6 +3,11 @@
 # ZSH Setup
 # ------------------------------------------------
 
+- name: Remove existing .zshrc to avoid overwrites
+  file:
+    path: "{{ home_dir }}/.zshrc"
+    state: absent
+
 - name: Remove existing Oh My Zsh installation
   file:
     path: "{{ home_dir }}/.oh-my-zsh"
