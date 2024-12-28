@@ -64,32 +64,6 @@
         path: "/tmp/nvim-linux64.tar.gz"
         state: absent
 
-    # ---------------------------------------------
-    # Zsh
-    # ---------------------------------------------
-    - name: Remove existing Oh My Zsh installation
-      file:
-        path: "{{ home_dir }}/.oh-my-zsh"
-        state: absent
-
-    - name: Install Oh My Zsh
-      get_url:
-        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-        dest: /tmp/install_ohmyzsh.sh
-        mode: "0777"
-
-    - name: Run OhMyZsh installation script
-      command:
-        cmd: sh /tmp/install_ohmyzsh.sh
-
-    - name: Remove temporary Oh My Zsh installation script
-      file:
-        path: /tmp/install_ohmyzsh.sh
-        state: absent
-
-    - name: Set Zsh as default shell
-      command: chsh -s /bin/zsh "{{ansible_user_id}}"
-
     # ensure /root/.ssh directory exists
     - name: ensure /root/.ssh directory exists
       file:
@@ -272,32 +246,32 @@
     # ------------------------------------------
     # Zsh
     # ------------------------------------------
-    - name: Install zsh-autosuggestions
-      git:
-        repo: https://github.com/zsh-users/zsh-autosuggestions
-        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-        version: master
-
-    - name: Install zsh-syntax-highlighting
-      git:
-        repo: https://github.com/zsh-users/zsh-syntax-highlighting
-        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-        version: master
-
-    - name: Install you-should-use
-      git:
-        repo: https://github.com/MichaelAquilina/zsh-you-should-use.git
-        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/you-should-use"
-        version: master
-
-    - name: Install zsh-bat
-      git:
-        repo: https://github.com/fdellwing/zsh-bat.git
-        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/zsh-bat"
-        version: master
-
-    - name: Install Powerlevel10k theme
-      git:
-        repo: https://github.com/romkatv/powerlevel10k.git
-        dest: "{{ home_dir }}/.oh-my-zsh/custom/themes/powerlevel10k"
-        version: master
+#    - name: Install zsh-autosuggestions
+#      git:
+#        repo: https://github.com/zsh-users/zsh-autosuggestions
+#        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+#        version: master
+#
+#    - name: Install zsh-syntax-highlighting
+#      git:
+#        repo: https://github.com/zsh-users/zsh-syntax-highlighting
+#        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+#        version: master
+#
+#    - name: Install you-should-use
+#      git:
+#        repo: https://github.com/MichaelAquilina/zsh-you-should-use.git
+#        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/you-should-use"
+#        version: master
+#
+#    - name: Install zsh-bat
+#      git:
+#        repo: https://github.com/fdellwing/zsh-bat.git
+#        dest: "{{ home_dir }}/.oh-my-zsh/custom/plugins/zsh-bat"
+#        version: master
+#
+#    - name: Install Powerlevel10k theme
+#      git:
+#        repo: https://github.com/romkatv/powerlevel10k.git
+#        dest: "{{ home_dir }}/.oh-my-zsh/custom/themes/powerlevel10k"
+#        version: master

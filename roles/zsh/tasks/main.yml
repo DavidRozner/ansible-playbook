@@ -1,0 +1,34 @@
+---
+# ------------------------------------------------
+# ZSH Setup
+# ------------------------------------------------
+
+- name: Remove existing Oh My Zsh installation
+  file:
+    path: "{{ home_dir }}/.oh-my-zsh"
+    state: absent
+
+- name: Install Oh My Zsh
+  get_url:
+    url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+    dest: "/tmp/install-oh-my-zsh.sh"
+    mode: "0777"
+
+- name: Run Oh My Zsh installation script
+  command:
+    cmd: "sh /tmp/install-oh-my-zsh.sh"
+
+- name: Remove temporary Oh My Zsh installation script
+  file:
+    path: "/tmp/install-oh-my-zsh.sh"
+    state: absent
+
+- name: Set Zsh as default shell
+  command:
+    cmd: "chsh -s $(which zsh)"
+
+- name: Install Zinit
+  shell: |
+    bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+  args:
+    crates: "{{ home_dir }}/.local/share/zinit/zinit.git"
