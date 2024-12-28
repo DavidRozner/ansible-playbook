@@ -1,0 +1,27 @@
+---
+- name: Update system
+  become: true
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install essential tools
+  become: true
+  apt:
+      name:
+      - git
+      - stow
+      - zsh
+      - tmux
+      - xclip
+      - eza
+      - curl
+      - bat
+      - gcc
+      - clang
+      - build-essential
+      - libstdc++-12-dev
+      - wget
+      state: present
+  tags:
+      - essential

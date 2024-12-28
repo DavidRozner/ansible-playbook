@@ -8,41 +8,11 @@
     ssh_dir: "{{ home_dir }}/.ssh"
 
   pre_tasks:
-    - name: Ensure essential tools are installed
-      tags: essential
+    - name: Perform system setup
+      include_tasks: tasks/system-setup.yml
 
   roles:
     - role: zsh
-
-  tasks:
-    # Update and upgrade system
-    - name: Update system
-      become: true
-      apt:
-        update_cache: yes
-        upgrade: dist
-
-    # Install essential packages
-    - name: Install essential tools
-      become: true
-      apt:
-        name:
-          - git
-          - stow
-          - zsh
-          - tmux
-          - xclip
-          - eza
-          - curl
-          - bat
-          - gcc
-          - clang
-          - build-essential
-          - libstdc++-12-dev
-          - wget
-        state: present
-      tags:
-        - essential
 
     # ---------------------------------------------
     # Nvim
