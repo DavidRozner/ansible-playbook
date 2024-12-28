@@ -7,6 +7,10 @@
     home_dir: "{{ ansible_env.HOME }}"
     ssh_dir: "{{ home_dir }}/.ssh"
 
+  pre_tasks:
+    - name: Ensure essential tools are installed
+      tags: essential
+
   roles:
     - role: zsh
 
@@ -37,6 +41,8 @@
           - libstdc++-12-dev
           - wget
         state: present
+      tags:
+        - essential
 
     # ---------------------------------------------
     # Nvim
