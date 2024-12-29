@@ -37,10 +37,14 @@
     sh -c
     "$(curl -fsSL
     https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh))":
+  args:
+    executable: /bin/bash
 
 - name: Update Zinit to the latest version
   shell: |
     zinit self-update
+  args:
+    executable: /bin/zsh
 
 # Delete default generated .zshrc, so stow can symlink the correct one
 - name: Remove default .zshrc
