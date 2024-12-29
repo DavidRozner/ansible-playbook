@@ -15,6 +15,7 @@
       - tmux
       - xclip
       - eza
+      - unzip
       - curl
       - bat
       - gcc
