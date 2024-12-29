@@ -1,0 +1,127 @@
+---
+# ------------------------------------------
+# LSP Configuration
+# ------------------------------------------
+
+
+# ------------------------------------------
+# Rust
+# ------------------------------------------
+- name: Install rustup
+  shell: |
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  args:
+    creates: "{{ home_dir }}/.cargo/bin/rustup"
+
+- name: Install rust-analyzer
+  shell: |
+    source $HOME/.cargo/env && rustup component add rust-analyzer
+  args:
+    executable: /bin/bash
+
+
+# ------------------------------------------
+# TypeScript (typescript-language-server)
+# ------------------------------------------
+
+- name: Install Node.js and npm
+  become: true
+  apt:
+    name: nodejs
+    state: present
+  tags:
+    - nodejs
+
+- name: Install Node.js build tools
+  become: true
+  apt:
+    name: build-essential
+    state: present
+  tags:
+    - nodejs
+
+- name: Install npm ( if not included )
+  become: true
+  apt:
+    name: npm
+    state: present
+  tags:
+    - nodejs
+
+- name: Install TypeScript LSP
+  become: true
+  npm:
+    name: typescript-language-server
+    global: yes
+  tags:
+    - lsp
+
+- name: Install TypeScript
+  become: true
+  npm:
+    name: typescript
+    global: yes
+  tags:
+    - lsp
+
+# ------------------------------------------
+# Python (pyright)
+# ------------------------------------------
+#    - name: Install Python LSP
+#      npm:
+#        name: pyright
+#        global: yes
+#      tags:
+#        - lsp
+
+# ------------------------------------------
+# Java (jdtls)
+# ------------------------------------------
+#    - name: Install Java LSP (jdtls)
+#      shell: |
+#        curl -L -o /tmp/jdtls.tar.gz https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz
+#        mkdir -p ~/.local/share/jdtls
+#        tar -xzf /tmp/jdtls.tar.gz -C ~/.local/share/jdtls --strip-components=1
+#      args:
+#        creates: ~/.local/share/jdtls
+
+# ------------------------------------------
+# C# (omnisharp)
+# ------------------------------------------
+#    - name: Install .NET SDK
+#      shell: |
+#        wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+#        dpkg -i packages-microsoft-prod.deb
+#        apt update
+#        apt install -y dotnet-sdk-6.0
+#      args:
+#        creates: /usr/bin/dotnet
+#
+#    - name: Install OmniSharp
+#      shell: |
+#        mkdir -p ~/.local/share/omnisharp
+#        wget https://github.com/OmniSharp/omnisharp-roslyn/releases/latest/download/omnisharp-linux-x64-net6.0.tar.gz -O /tmp/omnisharp.tar.gz
+#        tar -xzf /tmp/omnisharp.tar.gz -C ~/.local/share/omnisharp
+#      args:
+#        creates: ~/.local/share/omnisharp/OmniSharp.dll
+
+# ------------------------------------------
+# Go (gopls)
+# ------------------------------------------
+#    - name: Download and install Go
+#      shell: |
+#        curl -LO https://go.dev/dl/go1.21.1.linux-amd64.tar.gz
+#        tar -C /usr/local -xzf go1.21.1.linux-amd64.tar.gz
+#        echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
+#        export PATH=$PATH:/usr/local/go/bin
+#      args:
+#        creates: /usr/local/go/bin/go
+#
+#    - name: Install Go LSP (gopls)
+#      shell: |
+#        go install golang.org/x/tools/gopls@v0.16.0
+#      environment:
+#        GOPATH: "{{ ansible_env.HOME }}/go"
+#        PATH: "/usr/local/go/bin:{{ ansible_env.HOME }}/go/bin:{{ ansible_env.PATH }}"
+#      args:
+#        executable: /bin/bash

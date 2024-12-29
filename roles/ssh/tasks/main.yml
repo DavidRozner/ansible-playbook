@@ -1,0 +1,43 @@
+---
+# ------------------------------------------
+# SSH
+# ------------------------------------------
+- name: ensure /root/.ssh directory exists
+  file:
+    path: "{{ home_dir }}/.ssh"
+    state: directory
+    mode: '0700'
+
+- name: deploy ssh private keys
+  copy:
+    src: "ssh/{{item}}"
+    dest: "{{ ssh_dir }}/{{ item | regex_replace('.enc$', '') }}"
+    mode: '0600'
+    decrypt: yes
+  with_items:
+    - id_ed25519_personal.enc
+    - id_ed25519_heyday.enc
+    - id_ed25519_work.enc
+
+- name: Deploy SSH public keys
+  copy:
+    src: "ssh/{{item}}"
+    dest: "{{ ssh_dir }}/{{item}}"
+    mode: '0644'
+  with_items:
+    - id_ed25519_personal.pub
+    - id_ed25519_work.pub
+    - id_ed25519_heyday.pub
+
+- name: Deploy SSH Config
+  copy:
+    src: "ssh/config"
+    dest: "{{ ssh_dir }}/config"
+    mode: '0644'
+
+- name: Add GitHub to known_hosts
+  known_hosts:
+    path: "{{ home_dir }}/.ssh/known_hosts"
+    name: "github.com"
+    key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
+

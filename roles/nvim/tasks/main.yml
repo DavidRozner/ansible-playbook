@@ -1,0 +1,34 @@
+---
+# ---------------------------------------------
+# Nvim
+# ---------------------------------------------
+- name: download neovim binary
+  get_url:
+    url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+    dest: "/tmp/nvim-linux64.tar.gz"
+
+- name: remove old nvim version
+  file:
+    path: "/opt/nvim"
+    state: absent
+
+- name: extract neovim binary to /opt
+  become: true
+  unarchive:
+    src: "/tmp/nvim-linux64.tar.gz"
+    dest: "/opt"
+    remote_src: yes
+
+- name: symlink neovim binary to /usr/bin
+  become: true
+  file:
+    src: "/opt/nvim-linux64/bin/nvim"
+    dest: "/usr/bin/nvim"
+    state: link
+
+- name: "clean downloaded file"
+  become: true
+  file:
+    path: "/tmp/nvim-linux64.tar.gz"
+    state: absent
+

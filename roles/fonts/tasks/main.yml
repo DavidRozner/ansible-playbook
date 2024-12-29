@@ -1,0 +1,30 @@
+---
+
+# ------------------------------------------
+# Install Nerd fonts
+# ------------------------------------------
+- name: Ensure fonts directory exists
+  file:
+    path: "{{ home_dir }}/.local/share/fonts"
+    state: directory
+    mode: '0755'
+
+- name: Download Hack Nerd Font
+  get_url:
+    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Hack.zip"
+    dest: "/tmp/Hack.zip"
+
+- name: Extract Hack Nerd Font
+  unarchive:
+      src: "/tmp/Hack.zip"
+      dest: "{{ home_dir }}/.local/share/fonts"
+      remote_src: yes
+
+- name: Clean up downloaded Hack Nerd Font
+  file:
+    path: "/tmp/Hack.zip"
+    state: absent
+
+- name: Refresh font cache
+  shell: fc-cache -f -v
+

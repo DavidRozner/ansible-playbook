@@ -1,0 +1,20 @@
+---
+# ---------------------------------------------
+# Dotfiles
+# ---------------------------------------------
+- name: Clone dotfiles repository
+  git:
+    repo: git@github-personal:DavidRozner/dotfiles.git
+    dest: "{{ home_dir }}/dotfiles"
+    key_file: "{{ home_dir }}/.ssh/id_ed25519_personal"
+    version: HEAD
+
+- name: Apply dotfiles using Stow
+  shell: |
+    stow zsh
+    stow nvim
+    stow tmux
+    stow git
+    stow ideavim
+  args:
+    chdir: "{{ home_dir }}/dotfiles"
