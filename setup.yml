@@ -12,6 +12,7 @@
     - role: zsh
     - role: nvim
     - role: ssh
+    - role: tmux
     - role: dotfiles
     - role: fonts
     - role: lsp

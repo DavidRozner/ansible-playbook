@@ -1,0 +1,10 @@
+---
+# ---------------------------------------------
+# Tmux
+# ---------------------------------------------
+- name: Clone Tmux Plugin Manager
+  git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "{{ home_dir }}/.tmux/plugins/tmp"
+    update: yes
+

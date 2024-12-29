@@ -11,10 +11,10 @@
 
 - name: Apply dotfiles using Stow
   shell: |
-    stow zsh
-    stow nvim
-    stow tmux
-    stow git
-    stow ideavim
+    stow --restow zsh
+    stow --restow nvim
+    stow --restow tmux
+    stow --restow git
+    stow --restow ideavim
   args:
     chdir: "{{ home_dir }}/dotfiles"

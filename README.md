@@ -48,6 +48,9 @@ This playbook is organized into the following roles, each with specific tasks:
 ### Neovim Role
 - Install and configure Neovim (Nvim)
 
+### Tmux Role
+- Install Tmux Plugin manager
+
 ### SSH Role
 - Copy public SSH keys to the user's `.ssh` directory
 - Decrypt private SSH keys and store them securely in the `.ssh` directory
@@ -72,3 +75,8 @@ This playbook is organized into the following roles, each with specific tasks:
     - Python
     - PHP
   - Uncomment additional LSPs in `roles/lsp/tasks/main.yml` as needed
+
+  ## Post Install
+  Plugins are not installed by default, by they should install after first launch of tmux, zsh, and Nvim
+
+  Sometimes is also necessary to logout for zsh to be a default Shell

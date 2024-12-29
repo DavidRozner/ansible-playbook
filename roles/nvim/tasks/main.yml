@@ -8,6 +8,7 @@
     dest: "/tmp/nvim-linux64.tar.gz"
 
 - name: remove old nvim version
+  become: true
   file:
     path: "/opt/nvim"
     state: absent

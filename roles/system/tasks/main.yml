@@ -4,6 +4,7 @@
   apt:
     update_cache: yes
     upgrade: dist
+  ignore_errors: yes
 
 - name: Install essential tools
   become: true
