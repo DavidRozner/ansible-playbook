@@ -36,7 +36,11 @@
   shell: >
     sh -c
     "$(curl -fsSL
-    https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)":
+    https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh))":
+
+- name: Update Zinit to the latest version
+  shell: |
+    zinit self-update
 
 # Delete default generated .zshrc, so stow can symlink the correct one
 - name: Remove default .zshrc
