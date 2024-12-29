@@ -112,12 +112,14 @@
     # Rust
     # ------------------------------------------
     - name: Install rustup
+      become: true
       shell: |
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       args:
         creates: "{{ home_dir }}/.cargo/bin/rustup"
 
     - name: Install rust-analyzer
+      become: true
       shell: |
         source $HOME/.cargo/env && rustup component add rust-analyzer
       args:
@@ -129,6 +131,7 @@
     # ------------------------------------------
 
     - name: Install Node.js and npm
+      become: true
       apt:
         name: nodejs
         state: present
@@ -136,6 +139,7 @@
         - nodejs
 
     - name: Install Node.js build tools
+      become: true
       apt:
         name: build-essential
         state: present
@@ -143,6 +147,7 @@
         - nodejs
 
     - name: Install npm ( if not included )
+      become: true
       apt:
         name: npm
         state: present
@@ -150,6 +155,7 @@
         - nodejs
 
     - name: Install TypeScript LSP
+      become: true
       npm:
         name: typescript-language-server
         global: yes
@@ -157,6 +163,7 @@
         - lsp
 
     - name: Install TypeScript
+      become: true
       npm:
         name: typescript
         global: yes
