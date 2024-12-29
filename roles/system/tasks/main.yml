@@ -23,6 +23,7 @@
       - build-essential
       - libstdc++-12-dev
       - wget
+      - fzf
       state: present
   tags:
       - essential
