@@ -29,7 +29,6 @@
     state: absent
 
 - name: Set Zsh as default shell
-  become: true
   shell: "chsh -s $(which zsh) {{ ansible_user_id }}"
 
 - name: Install Zinit
