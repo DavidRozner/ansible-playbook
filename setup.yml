@@ -119,7 +119,6 @@
         creates: "{{ home_dir }}/.cargo/bin/rustup"
 
     - name: Install rust-analyzer
-      become: true
       shell: |
         source $HOME/.cargo/env && rustup component add rust-analyzer
       args:
