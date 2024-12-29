@@ -27,17 +27,21 @@
         state: absent
 
     - name: extract neovim binary to /opt
+      become: true
       unarchive:
         src: "/tmp/nvim-linux64.tar.gz"
         dest: "/opt"
         remote_src: yes
+
     - name: symlink neovim binary to /usr/bin
+      become: true
       file:
         src: "/opt/nvim-linux64/bin/nvim"
         dest: "/usr/bin/nvim"
         state: link
 
     - name: "clean downloaded file"
+      become: true
       file:
         path: "/tmp/nvim-linux64.tar.gz"
         state: absent
