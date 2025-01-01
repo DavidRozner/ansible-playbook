@@ -9,6 +9,12 @@
     key_file: "{{ home_dir }}/.ssh/id_ed25519_personal"
     version: HEAD
 
+- name: Remove conflicting files
+  shell: |
+    rm -rf ~/.p10k.zsh ~/.config/nvim ~/.tmux.conf ~/.gitconfig ~/.ideavimrc
+  args:
+    executable: /bin/bash
+
 - name: Apply dotfiles using Stow
   shell: |
     stow --restow zsh
