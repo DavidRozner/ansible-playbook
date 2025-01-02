@@ -22,6 +22,7 @@
       - gcc
       - clang
       - procps
+      - ripgrep
       - build-essential
       - libstdc++-12-dev
       - wget
