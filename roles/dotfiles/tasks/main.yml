@@ -22,5 +22,6 @@
     stow --restow tmux
     stow --restow git
     stow --restow ideavim
+    stow --restow curl
   args:
     chdir: "{{ home_dir }}/dotfiles"
